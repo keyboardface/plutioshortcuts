@@ -1,0 +1,136 @@
+/* Fast Checkboxes */
+.dupe {
+    position:absolute;
+    margin-top:-20px;
+    z-index:99999;
+}
+
+.task-checkbox {
+    margin:-10px;
+    padding:10px;
+    position:absolute;
+}
+.task-title {
+    padding-left:35px !important;
+}
+.dragging-handle+.task-checkbox{
+    padding:0;
+    position:relative;
+    margin:0;
+}
+.dragging-handle+.task-checkbox+.task-title {
+	padding-left:10px !important;
+}
+
+
+.checkbox input[type=checkbox].off+.checkbox-toggle {
+	background-color:#fff  !important;
+}
+.checkbox input[type=checkbox].checked+.checkbox-toggle {
+    border: 1px solid #3a4557;
+    background-color: #3a4557
+}
+
+.checkbox input[type=checkbox].checked+.checkbox-toggle .checkbox-icon {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1)
+}
+.checkbox.checkbox-green input[type=checkbox].checked+.checkbox-toggle {
+    border: 1px solid #4dbf39;
+    background-color: #4dbf39
+}
+.checkbox.checkbox-green input[type=checkbox].checked+.checkbox-toggle {
+    border: 1px solid #4dbf39;
+    background-color: #4dbf39
+}
+.checkbox.checkbox-orange input[type=checkbox].checked+.checkbox-toggle {
+    border: 1px solid #fa7e00;
+    background-color: #fa7e00
+}
+.checkbox.checkbox-red input[type=checkbox].checked+.checkbox-toggle {
+    border: 1px solid #db253c;
+    background-color: #db253c
+}
+.task .task-link .task-link-head .task-checkbox input[type=checkbox].checked+span {
+    border: 1px solid #4dbf39;
+    background-color: #4dbf39
+}
+.task-completed input[type=checkbox].checked+span:before {
+    content: "";
+    -webkit-animation-name: o;
+    animation-name: o;
+    -webkit-animation-duration: 1.1s;
+    animation-duration: 1.1s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    position: absolute;
+    left: -1px;
+    background-color: #4dbf39;
+    padding: 10px;
+    border-radius: 100%;
+    opacity: .3;
+    pointer-events: none;
+    z-index: 10
+}
+#task-page .task-head .task-checkbox input[type=checkbox].checked+span {
+    border: 1px solid #4dbf39;
+    background-color: #4dbf39
+}
+
+
+/* Double Click Comment to Edit */ 
+.comment-container {
+	cursor:hand;
+}
+
+/* Comment Button */ 
+.input-addons-strip .post-comment.hover {
+    color: #fff;
+    background-color: #4dbf39;
+}
+
+/* Sidebar */
+
+#main-menu .container .menu-list a {
+    padding:10px;
+}
+/* Project View */
+.list-section .list-item .list-item-cell {
+    padding:10px;
+}
+.list-section .list-item a.list-item-cell .list-title {
+    font-size:14px;
+    font-family:Segoe UI;
+}
+.list-section .list-item {
+    margin-bottom:5px;
+}
+
+/* Task List */
+.add-new-button-wrapper .add-new-button {
+    padding:5px;
+}
+
+.task a.task-link {
+    padding:10px !important;
+}
+a.task-link .task-checklist.not-completed-checklist {
+    display:none;
+}
+/*
+.task-link-head {
+    display:inline-block;
+    float:left;
+}
+a.task-link .task-checklist.not-completed-checklist {
+    display:inline-block;
+    width:50%;
+    margin-left:10%;
+    clear:left;
+}
+.task-link {
+    min-height:40px;
+    margin-top:2px;
+}
+*/
