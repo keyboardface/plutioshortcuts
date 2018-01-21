@@ -1,4 +1,15 @@
 /* Fast Checkboxes */
+.error-message {
+    display:block;
+    width:300px;
+    background:#7d2828;
+    color:#fff;
+    font-size:14px;
+    padding:10px;
+    text-align: center;
+    z-index: 999999;
+    position:relative;
+}
 .dupe {
     position:absolute;
     margin-top:-20px;
@@ -101,7 +112,7 @@
 }
 .list-section .list-item a.list-item-cell .list-title {
     font-size:14px;
-    font-family:Segoe UI;
+    /*font-family:Segoe UI;*/
 }
 .list-section .list-item {
     margin-bottom:5px;

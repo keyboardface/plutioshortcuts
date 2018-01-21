@@ -8,66 +8,77 @@ function init() {
 
         $('body').keydown(function (e) 
         {
+            // Escape Key anywhere
+            if (e.keyCode==27)
+                {
+                    closeOverlay(e);
+                }
+            // console.log(e.KeyCode);  
+            // If RTF Editing (Draft Editor)
             if ($(e.target).hasClass('public-DraftEditor-content'))
             {
-            	console.log('rtf editing');
+            	// console.log('rtf editing');
             	// editing rtf
-            	if (e.ctrlKey && e.keyCode==66)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==66)
             	{
             		console.log('ctrl+b');
             		//ctrl+b
             		$(e.target).parent().parent().next().find('.icon-text-bold').click();
             	}
-            	if (e.ctrlKey && e.keyCode==85)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==85)
             	{
             		console.log('ctrl+u');
             		//ctrl+b
             		$(e.target).parent().parent().next().find('.icon-text-underlined').click();
             	}
-            	if (e.ctrlKey && e.keyCode==73)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==73)
             	{
             		console.log('ctrl+i');
             		//ctrl+b
             		$(e.target).parent().parent().next().find('.icon-text-italic').click();
             	}
-            	if (e.ctrlKey && e.keyCode==49)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==49)
             	{
             		console.log('ctrl+1');
             		//ctrl+b
             		$(e.target).parent().parent().next().find('button:contains(H1)').click();
             	}
-            	if (e.ctrlKey && e.keyCode==50)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==50)
             	{
             		console.log('ctrl+2');
             		//ctrl+b
             		$(e.target).parent().parent().next().find('button:contains(H2)').click();
             	}
-            	if (e.ctrlKey && e.keyCode==55)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==55)
             	{
             		console.log('ctrl+7');
             		//unordered list
             		$(e.target).parent().parent().next().find('.icon-text-list').click();
             	}
-            	if (e.ctrlKey && e.keyCode==56)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==56)
             	{
             		console.log('ctrl+8');
             		//numbered list
             		$(e.target).parent().parent().next().find('.icon-text-list-ordered').click();
             	}
-            	if (e.ctrlKey && e.keyCode==57)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==57)
             	{
             		console.log('ctrl+9');
             		//quote
             		$(e.target).parent().parent().next().find('.icon-text-quote').click();
             	}
-            	if (e.ctrlKey && e.keyCode==48)
+            	if ((e.ctrlKey || e.metaKey) && e.keyCode==48)
             	{
             		console.log('ctrl+0');
             		//code
             		$(e.target).parent().parent().next().find('.icon-text-code').click();
             	}
             }
-            if (e.target.tagName=='INPUT') {
+
+            // If you're adding a task or in the search box. 
+            // Input 
+            if (e.target.tagName=='INPUT') 
+            {
                 //.has-inner-icon
                 console.log('keydown on input');
                 if (e.keyCode==27)
@@ -111,6 +122,10 @@ function init() {
                     
             }
             
+            
+            // If you're not adding a task, and you're not editing the description.
+            // Basically, if you're anywhere on the site. 
+            // this is for g, p go to projects, etc. 
             
             if (e.target.tagName!='INPUT' && !$(e.target).hasClass('public-DraftEditor-content')) {
                 e.preventDefault();
@@ -207,7 +222,7 @@ function init() {
                 }
             }
             
-            if (e.shiftKey && e.ctrlKey && e.keyCode == 13) 
+            if (e.shiftKey && (e.ctrlKey || e.metaKey) && e.keyCode == 13) 
             {
             // ctrlKey and Enter
             e.preventDefault();
@@ -223,7 +238,7 @@ function init() {
             return false;
             }
         
-            if (e.ctrlKey && e.keyCode == 13) 
+            if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) 
             {
             // ctrlKey and Enter
             e.preventDefault();
@@ -253,8 +268,9 @@ function init() {
 
     
     $('body').dblclick(function(e) {
+        // console.log(e.target);
         // you can't attach the click event to the container directly because it's lazy loaded.
-        container = $(e.target).parents('.comment-container');
+        container = $(e.target).closest('.comment-container');
         if (container.length=1) {
             if ($('a.comment-edit-button').length>0) 
             {
@@ -272,6 +288,13 @@ function init() {
             $(e.target).find('label.checkbox').click();
             return false;
         }
+        if ($(e.target).hasClass('icon-cross'))
+        {
+            // icon-cross
+            // closing overlay. 
+            // check for comments. 
+            closeOverlay(e);
+        }        
 
         if ($(e.target).hasClass('checkbox')) {
             //label.checkbox
@@ -354,6 +377,83 @@ function init() {
 var lastKey;
 
 init();
+
+function closeOverlay(e) 
+{
+
+    console.log('closeOverlay(e)');
+
+    if ($('.comment-edit-button').length>0)
+    {
+        // if you're editing a comment. 
+        if ($('.comment-edit-button').text()=='CancelEditEditEditEditEdit')
+        {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            $('.comment-edit-button')[0].click();
+        
+            return false;
+        }
+    }
+    // ESC key, check for if saving... 
+    if ($('.post-comment').length>0)
+    {
+       close = confirm('Are you sure? The comment will be lost');
+       console.log(close);
+       if (!close)
+       {
+
+         e.preventDefault();
+        e.stopPropagation();
+        return false;
+       } 
+
+    }
+
+    console.log('about to check if still saving');
+    if ($('.saving').length>0)
+    {
+        // need to show a message here. 
+        e.preventDefault();
+        e.stopPropagation(); 
+        
+        console.log('still saving... please wait');
+
+        $('.page-overlay-close').after('<div class="error-message">Saving in Progress... Try again in a second.</div');
+        
+        $('.save-state').bind("DOMSubtreeModified",function()
+        {
+            // monitor save-state. When changed, close the window.
+            // because it's automatically closing, we can possibly get rid of this notification message.
+            if ($('.saving').length==0) {
+                 $('.error-message').remove();
+                // not working. also needs a monitor for if the content of the rtf editor changes
+                // we need to have something to monitor this because it doesn't always trigger the "saving". 
+                // sometimes it just waits and then randomly says saved. 
+                
+                /*var press = jQuery.Event("keypress");
+                press.ctrlKey = false;
+                press.which = 27;
+                $(document).trigger(press);*/
+            }
+        });
+        
+        return false;
+    }
+
+    
+    /* Sub Tasks */
+    if ($('#task-page .back-button').length>0)
+    {
+        //if you're on a sub task page, hit the back button, don't close the window.
+        e.preventDefault();
+        e.stopPropagation(); 
+        $('#task-page .back-button')[0].click();
+         return false;
+    }
+}
+
 // site = jQuery.grep(sites, function (s) { return s.uri == "cnn.com" });
 // site = sites.filter(function (s) { return s.uri == "storyjumper.com" });
 
