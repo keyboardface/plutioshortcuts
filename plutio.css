@@ -1,3 +1,31 @@
+/* Attachments in Tasks */
+.attachment-file a {
+   background:#e6e6e6;
+   font-weight:bold;
+   padding:5px;
+   border:1px #ccc solid;
+}
+.attachment-file a:hover {
+  background:#d6d6d6;
+  color:#000;
+}
+.attachment-file a:before {
+  content: "\e003";
+    font-size: 1.137em;
+    font-family: plutio-icons-set!important;
+    font-style: normal!important;
+    font-weight: 400!important;
+    font-variant: normal!important;
+    text-transform: none!important;
+    text-decoration: none!important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1!important;
+    vertical-align: middle;
+    position: relative;
+    speak: none;
+}
+
 /* Fast Checkboxes */
 .error-message {
     display:block;

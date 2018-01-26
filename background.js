@@ -8,17 +8,16 @@ function init() {
 
         $('body').keydown(function (e) 
         {
-            // Escape Key anywhere
-            if (e.keyCode==27)
-                {
-                    closeOverlay(e);
-                }
+
             // console.log(e.KeyCode);  
             // If RTF Editing (Draft Editor)
             if ($(e.target).hasClass('public-DraftEditor-content'))
             {
             	// console.log('rtf editing');
             	// editing rtf
+                if (e.keyCode==27) {
+                    $(e.target).blur();
+                }
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==66)
             	{
             		console.log('ctrl+b');
@@ -74,7 +73,13 @@ function init() {
             		$(e.target).parent().parent().next().find('.icon-text-code').click();
             	}
             }
-
+            // moved down to allow the rtf editor to blur on escape first. 
+            
+            // Escape Key anywhere
+            if (e.keyCode==27)
+                {
+                    closeOverlay(e);
+                }
             // If you're adding a task or in the search box. 
             // Input 
             if (e.target.tagName=='INPUT') 
@@ -107,6 +112,8 @@ function init() {
                 }
                 if (e.keyCode==13 & lastKey=='Enter')
                 {
+                    // enter twice to open top project. 
+
 					o = $('.list-section').first().offset();
                     document.elementFromPoint(o.left+20, o.top+20).click();   
                 }
@@ -118,6 +125,8 @@ function init() {
                     //clearing the input doesn't work. meteor is weird.
                     //list-section
                     lastKey='Enter';
+                } else {
+                    lastKey='';
                 }
                     
             }
