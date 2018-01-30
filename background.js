@@ -11,13 +11,28 @@ function init() {
 
             // console.log(e.KeyCode);  
             // If RTF Editing (Draft Editor)
+
             if ($(e.target).hasClass('public-DraftEditor-content'))
             {
             	// console.log('rtf editing');
             	// editing rtf
+
+/*                if ($('#conversation-page').length==1)
+                {
+                    // on conversation page. 
+                    if (e.keyCode==13) 
+                    {
+                        // disable single enter to submit comment and force CTRL+ENTER
+                        e.preventDefault();
+                        return;
+                    }
+                }*/
+
+
                 if (e.keyCode==27) {
                     $(e.target).blur();
                 }
+
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==66)
             	{
             		console.log('ctrl+b');
@@ -283,7 +298,10 @@ function init() {
         if (container.length=1) {
             if ($('a.comment-edit-button').length>0) 
             {
-                $(container).find('a.comment-edit-button')[0].click();  
+                if ($(container).find('a.comment-edit-button').first().text()=='Edit')
+                {
+                    $(container).find('a.comment-edit-button')[0].click();  
+                }
             }
         }
     });
