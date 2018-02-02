@@ -11,7 +11,17 @@ function init() {
 
             // console.log(e.KeyCode);  
             // If RTF Editing (Draft Editor)
+            if (e.ctrlKey&& e.keyCode==67)
+            {
+                console.log('CTRL+C');
+                // for whatever reason, without this blank if statement, it blocks the copy functionality when on comments.
+                // succeed = document.execCommand("copy");
+                console.log('success:'+succeed);
+            } 
+            if (e.keyCode==27) {
+                // ESC Key
 
+            }
             if ($(e.target).hasClass('public-DraftEditor-content'))
             {
             	// console.log('rtf editing');
@@ -27,12 +37,21 @@ function init() {
                         return;
                     }
                 }*/
-
+                console.log('in rich text editor')
 
                 if (e.keyCode==27) {
+                    // ESC Key
+                    console.log('Esc');
                     $(e.target).blur();
                 }
 
+                if (e.keyCode == 17) 
+                {
+                    //17 = ctrlkey
+                    console.log('ctrl key adding hover to post-comment');
+                    $('.post-comment').addClass('hover');
+                    return true;
+                }
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==66)
             	{
             		console.log('ctrl+b');
@@ -88,7 +107,7 @@ function init() {
             		$(e.target).parent().parent().next().find('.icon-text-code').click();
             	}
             }
-            // moved down to allow the rtf editor to blur on escape first. 
+            // moved down to allow the rte editor to blur on escape first. 
             
             // Escape Key anywhere
             if (e.keyCode==27)
@@ -151,7 +170,7 @@ function init() {
             // Basically, if you're anywhere on the site. 
             // this is for g, p go to projects, etc. 
             
-            if (e.target.tagName!='INPUT' && !$(e.target).hasClass('public-DraftEditor-content')) {
+            if (e.target.tagName!='TEXTAREA' && e.target.tagName!='INPUT' && !$(e.target).hasClass('public-DraftEditor-content')) {
                 e.preventDefault();
                 
                 if (e.keyCode==83) 
@@ -248,7 +267,7 @@ function init() {
             
             if (e.shiftKey && (e.ctrlKey || e.metaKey) && e.keyCode == 13) 
             {
-            // ctrlKey and Enter
+            // shift and ctrlKey and Enter
             e.preventDefault();
             $('#task-page>.task-head>.task-checkbox label')[0].click();
             if ($('a.back-button').length>0)
@@ -273,11 +292,6 @@ function init() {
             return false;
             }
 
-            if (e.keyCode == 17) 
-            {
-                //17 = ctrlkey
-                $('.post-comment').addClass('hover');
-            }
         
             
         }
@@ -469,7 +483,18 @@ function closeOverlay(e)
         return false;
     }
 
-    
+    /* File Attachments */
+  
+
+/*    if ($('.preview-attachments').length>0)
+    {
+        //if you're on a attachments preview, x out of the preview.
+        e.preventDefault();
+        e.stopPropagation(); 
+        $('.preview-attachments .close-button a')[0].click();
+         return false;
+    }*/
+
     /* Sub Tasks */
     if ($('#task-page .back-button').length>0)
     {

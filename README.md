@@ -1,4 +1,4 @@
-# Keyboard Shortcuts for Plutio
+# Chrome Extension: Keyboard Shortcuts for Plutio
 
 **Submit Comment**	Ctrl / ⌘ +ENTER
 **Edit Comment**	Double Click Text
