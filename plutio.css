@@ -1,3 +1,34 @@
+/* Toggle Task Board */
+a.task-toggle {
+/*    margin-left:20px;
+    font-size:12px;
+*/    font-weight:bold;
+}
+.icon-minus, .icon-plus{
+    margin-right:5px;
+    margin-left:5px;
+}
+a.task-toggle {
+    font-size:14px;
+    padding:5px;
+    /*color:#edf2f7;*/
+}
+a.task-toggle i {
+    color:#3a4557;
+    background:#fff;
+    padding:2px;
+}
+input:focus {
+    border:1px #05b505 solid !important;
+    border-radius:5px !important;
+}
+/* Inline images in comments & descriptins */
+
+img.inline-image {
+    max-width:80%;
+    height:auto;
+}
+
 /* Attachments in Tasks */
 .attachment-file a {
    background:#e6e6e6;

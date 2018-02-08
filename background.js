@@ -18,10 +18,22 @@ function init() {
                 // succeed = document.execCommand("copy");
                 console.log('success:'+succeed);
             } 
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.keyCode==66)
+                {
+                    console.log('ctrl+shift+b');
+                    //ctrl+b
+                    toggle = $('.tasks-board-actions .menu-links a').first();
+                    toggle.addClass('task-toggle'); 
+                    $('div.tasks-board-title').append(toggle);         
+                }
             if (e.keyCode==27) {
                 // ESC Key
 
             }
+
+
+
+
             if ($(e.target).hasClass('public-DraftEditor-content'))
             {
             	// console.log('rtf editing');
@@ -52,6 +64,7 @@ function init() {
                     $('.post-comment').addClass('hover');
                     return true;
                 }
+
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==66)
             	{
             		console.log('ctrl+b');
@@ -182,8 +195,8 @@ function init() {
                     {
                         // open the toggle area if not open.
                         
-                        $('.has-inner-icon').first().focus().select();
-                        
+                        // $('.has-inner-icon').first().focus().select(); deprecated
+                        $('.utilities-block form input').first().focus().select();
                     } else {
                         //console.log($('.page-utilities').html());
                         if ($('a.utilities-toggle').length>0) {
@@ -212,6 +225,14 @@ function init() {
                     if ($('a.clear-button').length>0) 
                     {
                         $('a.clear-button')[0].click();
+                    } else {
+                        if ($('form input[placeholder=Search]').first().val()=='' && $('form input[placeholder=Search]').first().is(":focus")) 
+                        {
+                            $('form input[placeholder=Search]').first().blur();
+                        } else {
+                            $('form input[placeholder=Search]').first().focus().select();
+                        }
+
                     }
                 }
 
@@ -413,11 +434,16 @@ function init() {
 
     }
 
+    // init();
+
+
 }
 
 var lastKey;
 
+
 init();
+
 
 function closeOverlay(e) 
 {
