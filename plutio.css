@@ -1,3 +1,28 @@
+/* tab select*/
+.focus {
+    box-shadow:0 0 40px 0 rgba(25,70,97,.08);
+    border:1px green solid;  
+}
+.tasks-group-content div.focus {
+    border:none !important;
+    
+}
+div.focus>div>.task .task-link, .list-item.focus{
+    background:#272f41 !important;
+    color:#fff !important;
+}
+.task .task-link .task-link-fields .task-link-field.custom-task-field-multi span
+{
+    background:#fff;
+}
+.tasks-group-wrapper.focus {
+    border:none !important;
+}
+.tasks-group-wrapper.focus .tasks-group-content {
+    border:1px #a6a9a6 solid;
+}
+
+
 /* Toggle Task Board */
 a.task-toggle {
 /*    margin-left:20px;
@@ -153,7 +178,17 @@ img.inline-image {
 .comment-container {
 	cursor:hand;
 }
-
+.comment-options a {
+    display:inline-block;
+    font-size:12px;
+    background:#ccc;
+   padding:0 5px;
+    font-weight:bold;
+}
+.comment-options a:nth-child(1) {
+     margin-right:5px;
+}
+    
 /* Comment Button */ 
 .input-addons-strip .post-comment.hover {
     color: #fff;

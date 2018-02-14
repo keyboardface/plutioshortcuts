@@ -3,14 +3,92 @@
 * 
 
 ***/
+var item; // used for task & project tab select.
 
 function init() {
 
         $('body').keydown(function (e) 
         {
 
+            if (e.keyCode==9 && $('.overlay-layer').length<=0)
+            {
+                // don't tab through items if a overlay is popped up.
+                 
+                // tab
+                if ($('.list-item').length>0)
+                {
+                    // are we on a list page or a task page.
+                    item='.list-item';
+                    wrapper='nothing'; // purposely to not select anything
+                } else 
+                {
+                    // we have to add focus to the wrapper so we can loop through the wrappers
+                    // as well as the tasks themselves. 
+                    // we need a wrapper
+                    item='.tasks-group-body>div>div';
+                    wrapper='.tasks-group-wrapper';
+                }
+                /**** still needs to take into account empty next task group */
+                if ($('.focus').length==0)
+                {
+                    $(item).first().addClass('focus').parents(wrapper).addClass('focus');
+                } else 
+                {
+                    if (e.shiftKey)
+                    {
+                        if ($(item).length>0)
+                        {
+                            // $(item+'.focus').removeClass('focus').prev(item).addClass('focus');
+                            if ($(item+'.focus').prev(item).length==0)
+                            {
+                                // there isn't another task in that wrapper
+                                if (wrapper !='nothing')
+                                {
+                                $(item+'.focus').parents(wrapper).removeClass('focus').prev(wrapper).addClass('focus');
+                                $(item+'.focus').removeClass().parents(wrapper).removeClass('focus');
+                                $(wrapper+'.focus '+item).last().addClass('focus');
+                                }
+                            } else 
+                            {
+                                // if there is another task or item, remove it from that item and add it to the next
+                                $(item+'.focus').removeClass('focus').prev(item).addClass('focus');   
+                            } 
+
+                        }
+                    } else
+                    {
+                        if ($(item+'.focus').next(item).length==0)
+                        {
+                           // there isn't another task in that wrapper
+                           if (wrapper=='nothing')
+                           {
+                                // if there isn't a wrapper
+                                $(item).first().addClass('focus');
+                           }
+                            else
+                           {
+                                // if there is a wrapper
+                                $(item+'.focus').parents(wrapper).removeClass('focus').next(wrapper).addClass('focus');
+                                $(item+'.focus').removeClass();
+                                $(wrapper+'.focus '+item).first().addClass('focus');                           
+                            }
+                        }
+                        else 
+                        {
+                            // if there is another task or item, remove it from that item and add it to the next
+                            $(item+'.focus').removeClass('focus').next(item).addClass('focus');   
+                        }           
+                    }
+                }
+
+            }
+
+
+
             // console.log(e.KeyCode);  
             // If RTF Editing (Draft Editor)
+
+
             if (e.ctrlKey&& e.keyCode==67)
             {
                 console.log('CTRL+C');
@@ -22,9 +100,18 @@ function init() {
                 {
                     console.log('ctrl+shift+b');
                     //ctrl+b
-                    toggle = $('.tasks-board-actions .menu-links a').first();
-                    toggle.addClass('task-toggle'); 
-                    $('div.tasks-board-title').append(toggle);         
+                    $('.tasks-board-actions .menu-links a').each(function() 
+                    {
+                        
+                        if ($(this).text()=='Collapse'|| $(this).text()=='Expand')
+                        {
+                            $(this).addClass('task-toggle'); 
+                            $(this).parent().parent().parent().parent().parent().parent().append(this);
+                        }
+                        // $('div.tasks-board-title').append(toggle);
+                    });
+                    
+                             
                 }
             if (e.keyCode==27) {
                 // ESC Key
@@ -49,6 +136,14 @@ function init() {
                         return;
                     }
                 }*/
+                // adding titles to show shortcuts needs to be added to the dom monitoring later. 
+                // right now, it's just doing it with every click. not the best here. 
+                if ($('.post-comment').length>0)
+                {   
+                    $('.post-comment').attr('title','Ctrl+Enter'); 
+                }
+                
+
                 console.log('in rich text editor')
 
                 if (e.keyCode==27) {
@@ -62,6 +157,7 @@ function init() {
                     //17 = ctrlkey
                     console.log('ctrl key adding hover to post-comment');
                     $('.post-comment').addClass('hover');
+
                     return true;
                 }
 
@@ -131,7 +227,11 @@ function init() {
             // Input 
             if (e.target.tagName=='INPUT') 
             {
+                // clear focus 
+                $('.focus').removeClass('focus');
+
                 //.has-inner-icon
+
                 console.log('keydown on input');
                 if (e.keyCode==27)
                 {
@@ -185,12 +285,22 @@ function init() {
             
             if (e.target.tagName!='TEXTAREA' && e.target.tagName!='INPUT' && !$(e.target).hasClass('public-DraftEditor-content')) {
                 e.preventDefault();
-                
+                if (e.keyCode==13)
+                {
+                    // enter
+                    console.log('Enter, open list item');
+                    if ($('.focus').length>0)
+                    {
+                        console.log('click');
+                        $(item + '.focus a')[0].click();
+                    }
+                }
                 if (e.keyCode==83) 
                 {
                     console.log('keydown: s');
                     //s for search
-                    
+                    $('.focus').removeClass('focus');
+
                     if ( $('#page-utilities').first().hasClass('opened') ) 
                     {
                         // open the toggle area if not open.
@@ -222,6 +332,7 @@ function init() {
                     console.log('Keydown: ESC');
                     // escape key
                     // if on projects screen, clear the filter 
+                    $('.focus').removeClass('focus');
                     if ($('a.clear-button').length>0) 
                     {
                         $('a.clear-button')[0].click();
@@ -331,11 +442,11 @@ function init() {
         // you can't attach the click event to the container directly because it's lazy loaded.
         container = $(e.target).closest('.comment-container');
         if (container.length=1) {
-            if ($('a.comment-edit-button').length>0) 
+            if ($('a.edit-button').length>0) 
             {
-                if ($(container).find('a.comment-edit-button').first().text()=='Edit')
+                if ($(container).find('a.edit-button').first().text()=='Edit')
                 {
-                    $(container).find('a.comment-edit-button')[0].click();  
+                    $(container).find('a.edit-button')[0].click();  
                 }
             }
         }
@@ -449,7 +560,8 @@ function closeOverlay(e)
 {
 
     console.log('closeOverlay(e)');
-
+    $('.focus').removeClass('focus');
+    
     if ($('.comment-edit-button').length>0)
     {
         // if you're editing a comment. 
@@ -530,6 +642,20 @@ function closeOverlay(e)
         $('#task-page .back-button')[0].click();
          return false;
     }
+
+    /* Notification Indicator */
+    if ($('.notifications-indicator-close').length>0)
+    {
+        //if you're on a sub task page, hit the back button, don't close the window.
+        e.preventDefault();
+        e.stopPropagation(); 
+        $('.notifications-indicator-close')[0].click();
+         return false;
+    }
+
+
+    
+
 }
 
 // site = jQuery.grep(sites, function (s) { return s.uri == "cnn.com" });
