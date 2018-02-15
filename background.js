@@ -298,7 +298,7 @@ function init() {
                 if (e.keyCode==83) 
                 {
                     console.log('keydown: s');
-                    //s for search
+                    //"s" 's' for search
                     $('.focus').removeClass('focus');
 
                     if ( $('#page-utilities').first().hasClass('opened') ) 
@@ -461,6 +461,16 @@ function init() {
             $(e.target).find('label.checkbox').click();
             return false;
         }
+        if ($(e.target).hasClass('checkbox-toggle'))
+        {
+            // if the span.checkbox-toggle is clicked, find the actual label 
+            // and click that to trigger the fast check. 
+            // span.checkbox-toggle has a higher z-index.
+            e.preventDefault();
+            $(e.target).closest('label.checkbox').click();
+            return false;
+        }
+
         if ($(e.target).hasClass('icon-cross'))
         {
             // icon-cross
