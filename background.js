@@ -4,21 +4,50 @@
 
 ***/
 var item; // used for task & project tab select.
-
 function init() {
 
-        $('body').keydown(function (e) 
+        $(document).keydown(function (e) 
         {
-
+            if (e.keyCode==9)
+            {
+                
+                console.log('TAB');
+                //if in task-description, focus on comment.
+                if ($(e.target).parents('.task-description').length>0)
+                {
+                    e.preventDefault();
+                    console.log('task-description. Tab to comments');
+                    $('.comment-input .public-DraftEditor-content').focus();
+                    $('.comment-input .DraftEditor-root').addClass('focus');
+                    $('.comment-input .public-DraftEditor-content').blur(function()
+                        {
+                           $('.comment-input .DraftEditor-root').removeClass('focus');
+                        });  
+                    return;                 
+                }
+                if ($('#task-page').length>0)
+                {
+                    console.log('on task page');
+                    // we're on a task page, but not in the description, comment field or input
+                    // select the first input
+                    console.log(e.target.tagName);
+                    console.log($(e.target).hasClass('public-DraftEditor-content'));
+                    if (!(e.target.tagName=='INPUT' || $(e.target).hasClass('public-DraftEditor-content')))
+                    {
+                        console.log('focus on task title');
+                        $('.task-title input').focus();
+                    }
+                }                    
+            }
             if (e.keyCode==9 && $('.overlay-layer').length<=0)
             {
                 // don't tab through items if a overlay is popped up.
                  
                 // tab
-                if ($('.list-item').length>0)
+                if ($('.content .list-item').length>0)
                 {
                     // are we on a list page or a task page.
-                    item='.list-item';
+                    item='.content .list-item';
                     wrapper='nothing'; // purposely to not select anything
                 } else 
                 {
@@ -215,6 +244,7 @@ function init() {
             		//code
             		$(e.target).parent().parent().next().find('.icon-text-code').click();
             	}
+
             }
             // moved down to allow the rte editor to blur on escape first. 
             
@@ -570,7 +600,11 @@ function closeOverlay(e)
 {
 
     console.log('closeOverlay(e)');
-    $('.focus').removeClass('focus');
+    if ($('.focus').length>0)
+    {
+        $('.focus').removeClass('focus');
+        return;
+    }
     
     if ($('.comment-edit-button').length>0)
     {

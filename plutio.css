@@ -190,8 +190,9 @@ img.inline-image {
 }
     
 /* Comment Button */ 
-.input-addons-strip .post-comment.hover {
-    color: #fff;
+
+.comment-input-container .comment-options-block .post-comment.hover {
+    color: #fff !important;
     background-color: #4dbf39;
 }
 

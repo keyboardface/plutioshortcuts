@@ -1,6 +1,6 @@
 {
   "name": "Plutio Shortcuts",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "manifest_version": 2,
   "description": "Adds shortcuts & UI improvements to Plutio.com",
   "background": {
