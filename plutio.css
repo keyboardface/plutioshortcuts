@@ -191,9 +191,10 @@ img.inline-image {
     
 /* Comment Button */ 
 
-.comment-input-container .comment-options-block .post-comment.hover {
-    color: #fff !important;
-    background-color: #4dbf39;
+.comment-input-container .comment-options-block button.hover {
+    background-color: #3f7b20;
+   /*  border: 2px #2b5814 solid;
+   padding:1px 4px !important; */
 }
 
 /* Sidebar */

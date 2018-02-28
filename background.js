@@ -185,7 +185,7 @@ function init() {
                 {
                     //17 = ctrlkey
                     console.log('ctrl key adding hover to post-comment');
-                    $('.post-comment').addClass('hover');
+                    $('.comment-options-block button').addClass('hover');
 
                     return true;
                 }
@@ -446,10 +446,11 @@ function init() {
             if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) 
             {
             // ctrlKey and Enter
+            // not working yet. Testing needed to get button click to work. 
             e.preventDefault();
-            if ($('.post-comment').length>0) 
+            if ($('.comment-options-block button').length>0) 
                 {
-                $('.post-comment')[0].click();
+                $('.comment-options-block button')[0].click();
                 }
             return false;
             }
@@ -461,7 +462,7 @@ function init() {
     
     $('body').keyup(function (e) 
         {
-            $('.post-comment').removeClass('hover');
+            $('.comment-options-block button').removeClass('hover');
         }
     );
     
@@ -620,7 +621,7 @@ function closeOverlay(e)
         }
     }
     // ESC key, check for if saving... 
-    if ($('.post-comment').length>0)
+    if ($('.comment-options-block button').length>0)
     {
        close = confirm('Are you sure? The comment will be lost');
        console.log(close);
