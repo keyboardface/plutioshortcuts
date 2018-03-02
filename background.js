@@ -6,7 +6,7 @@
 var item; // used for task & project tab select.
 function init() {
 
-        $(document).keydown(function (e) 
+        $('body').keydown(function (e) 
         {
             if (e.keyCode==9)
             {
@@ -451,6 +451,7 @@ function init() {
             if ($('.comment-options-block button').length>0) 
                 {
                 $('.comment-options-block button')[0].click();
+                $('.comment-input-block public-DraftEditor-content').html('');
                 }
             return false;
             }
@@ -636,6 +637,7 @@ function closeOverlay(e)
     }
 
     console.log('about to check if still saving');
+    console.log($('.saving').length);
     if ($('.saving').length>0)
     {
         // need to show a message here. 
@@ -644,24 +646,24 @@ function closeOverlay(e)
         
         console.log('still saving... please wait');
 
-        $('.page-overlay-close').after('<div class="error-message">Saving in Progress... Try again in a second.</div');
+        $('.page-overlay-navigation').after('<div class="error-message">Saving in Progress... Try again in a second.</div>');
         
-        $('.save-state').bind("DOMSubtreeModified",function()
-        {
-            // monitor save-state. When changed, close the window.
-            // because it's automatically closing, we can possibly get rid of this notification message.
-            if ($('.saving').length==0) {
-                 $('.error-message').remove();
-                // not working. also needs a monitor for if the content of the rtf editor changes
-                // we need to have something to monitor this because it doesn't always trigger the "saving". 
-                // sometimes it just waits and then randomly says saved. 
+        // $('.save-state').bind("DOMSubtreeModified",function()
+        // {
+        //     // monitor save-state. When changed, close the window.
+        //     // because it's automatically closing, we can possibly get rid of this notification message.
+        //     if ($('.saving').length==0) {
+        //          $('.error-message').remove();
+        //         // not working. also needs a monitor for if the content of the rtf editor changes
+        //         // we need to have something to monitor this because it doesn't always trigger the "saving". 
+        //         // sometimes it just waits and then randomly says saved. 
                 
-                /*var press = jQuery.Event("keypress");
-                press.ctrlKey = false;
-                press.which = 27;
-                $(document).trigger(press);*/
-            }
-        });
+        //         /*var press = jQuery.Event("keypress");
+        //         press.ctrlKey = false;
+        //         press.which = 27;
+        //         $(document).trigger(press);*/
+        //     }
+        // });
         
         return false;
     }
