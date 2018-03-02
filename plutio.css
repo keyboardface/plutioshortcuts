@@ -1,4 +1,4 @@
-/* tab select*/
+ tab select*/
 .focus {
     box-shadow:0 0 40px 0 rgba(25,70,97,.08);
     border:1px green solid;  
@@ -222,9 +222,11 @@ img.inline-image {
 .task a.task-link {
     padding:10px !important;
 }
-a.task-link .task-checklist.not-completed-checklist {
+/* remove the 0% completed bar */
+/*a.task-link .task-checklist.not-completed-checklist {
     display:none;
 }
+*/
 /*
 .task-link-head {
     display:inline-block;
@@ -240,4 +242,3 @@ a.task-link .task-checklist.not-completed-checklist {
     min-height:40px;
     margin-top:2px;
 }
-*/
