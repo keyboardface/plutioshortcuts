@@ -1,6 +1,6 @@
 {
   "name": "Plutio Shortcuts",
-  "version": "0.7.9",
+  "version": "0.8",
   "manifest_version": 2,
   "description": "Adds shortcuts & UI improvements to Plutio.com",
   "background": {
@@ -36,7 +36,7 @@
             "matches":[ "https://*.plutio.com/*","http://*.plutio.com/*"],
             "run_at": "document_idle",
             "css":["plutio.css"],
-            "js": ["jquery.js","background.js"],
+            "js": ["jquery.js","jquery.visible.min.js","background.js"],
             "all_frames": true
         }
     ]

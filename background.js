@@ -4,14 +4,267 @@
 
 ***/
 var item; // used for task & project tab select.
+var wrapper;
+
+function addToolTips()
+{
+    /* Not active yet. Needs an event that loads them */
+    $('i.icon-text-bold').parent().attr('title','CTRL+B');
+    $('i.icon-text-italic').parent().attr('title','CTRL+I');
+    $('i.icon-text-underlined').parent().attr('title','CTRL+U');
+    $('button:contains(H1)').attr('title','CTRL+1');
+    $('button:contains(H2)').attr('title','CTRL+2');
+    $('i.icon-text-list').parent().attr('title','CTRL+7');
+    $('i.icon-text-ordered').parent().attr('title','CTRL+8');
+    $('i.icon-text-quote').parent().attr('title','CTRL+9');
+    $('i.icon-text-code').parent().attr('title','CTRL+0');
+}
+function initNav()
+{
+
+    if ($('.content .list-item').length>0)
+    {
+        // Initializing variables for tabbing through
+        // are we on a list page or a task page.
+        item='.content .list-item';
+        wrapper='nothing'; // purposely to not select anything
+    } else 
+    {
+        // we have to add focus to the wrapper so we can loop through the wrappers
+        // as well as the tasks themselves. 
+        // we need a wrapper
+        item='.tasks-group-body div.task';
+        wrapper='.tasks-group-wrapper';
+        // end intializing variables for tabbing through
+    }
+
+    addToolTips();
+}
+function selectNext()
+{
+    if ($('.overlay-layer').length>0)
+    {
+        // if there's an overlay, don't do anything. You're on a task modal screen. 
+        return;
+    }
+
+    if ($('.focus').length==0)
+    {
+        // if no item has focus, add focus to the first item (task or project)
+        $(item).first().addClass('focus').parents(wrapper).addClass('focus');
+        return;
+    }
+
+    if ($(item+'.focus').next(item).length==0)
+    {
+       // there isn't a "next" task
+       if (wrapper=='nothing')
+       {
+            // if there isn't a wrapper on the page ( see initNav() ), disregard it and simply select first item 
+            // this is for tabbing through projects on project index page.
+            // add focus to the first item
+            $(item).first().addClass('focus');
+       }
+        else
+       {
+            // if there is a wrapper
+            // there are task groups to nav through.
+            // but there isn't a next item, in this case, select the input so they can add a task. 
+            // this is causing problems, however, so let's disable for the time being. 
+           selectNextGroup('first');
+
+           /* Code to select next input to add task. Disabled*/
+            // $(item+'.focus').parents(wrapper).find('input').focus();                                    
+            // $(item+'.focus').removeClass();
+           
+            // code to select next wrapper's item
+            // $(item+'.focus').parents(wrapper).removeClass('focus').next(wrapper).addClass('focus');
+            // $(wrapper+'.focus '+item).first().addClass('focus');                           
+        }
+    }
+    else 
+    {
+        // if there is another task or item, remove it from that item and add it to the next
+        item_focus = $(item+'.focus').first();
+        $(item+'.focus').removeClass('focus');
+        item_focus.next(item).addClass('focus');
+        // $(item+'.focus').first().removeClass('focus').next(item).addClass('focus');   
+    } 
+}
+function selectPrev()
+{
+    if ($('.overlay-layer').length>0)
+    {
+        // if there's an overlay, don't do anything. You're on a task modal screen. 
+        return;
+    }
+    // Go backwards
+    if ($(item).length>0)
+    {
+        // $(item+'.focus').removeClass('focus').prev(item).addClass('focus');
+        if ($(item+'.focus').prev(item).length==0)
+        {
+            // there isn't another task in that wrapper
+            if (wrapper !='nothing')
+            {
+            selectPrevGroup();
+            $(wrapper+'.focus '+item).last().addClass('focus');
+            }
+        } else 
+        {
+            // if there is another task or item, remove it from that item and add it to the next
+            $(item+'.focus').removeClass('focus').prev(item).addClass('focus');   
+        } 
+
+    }
+}
+function selectNextGroup(first='')
+{
+if ($('.overlay-layer').length>0)
+{
+    // if there's an overlay, don't do anything. You're on a task modal screen. 
+    return;
+}
+
+ if ($('.focus').length==0)
+    {
+        // if no item has focus, add focus to the first item (task or project)
+        selectNext();
+        return;
+    }   
+   /* 
+   if ($(item+'.focus').parents(wrapper).next(wrapper).length==0)
+    {
+        // if there is no next group, select first group.
+        $(item+'.focus').parents(wrapper).removeClass('focus').first(wrapper).addClass('focus');
+        $(item+'.focus').removeClass('focus');
+        $(wrapper+'.focus '+item).first().addClass('focus'); 
+    }
+    */
+
+    nth = $(item+'.focus').index()+1; 
+    if (first=='first')
+    {
+        nth=0;    
+    }
+
+    $(item+'.focus').parents(wrapper).removeClass('focus').next(wrapper).addClass('focus');
+    $(item+'.focus').removeClass('focus');
+    
+    if ($(wrapper+'.focus '+item+':nth-child('+nth+')').length>0)
+    {
+        // is there a list item at the same height as the current item
+        $(wrapper+'.focus '+item+':nth-child('+nth+')').addClass('focus');
+    } else
+    {
+        // if there isn't another item at the same height, select the first item.
+        $(wrapper+'.focus '+item).first().addClass('focus'); 
+    }
+
+    return;  
+}
+function selectPrevGroup()
+{
+    if ($('.overlay-layer').length>0)
+    {
+        // if there's an overlay, don't do anything. You're on a task modal screen. 
+        return;
+    }
+
+    $(item+'.focus').parents(wrapper).removeClass('focus').prev(wrapper).addClass('focus');
+    $(item+'.focus').removeClass('focus').parents(wrapper).removeClass('focus');
+}
+
 function init() {
 
         $('body').keydown(function (e) 
         {
+
+            initNav();
+            console.log(item)
+
+            if (e.keyCode==39)
+            {
+                //RIGHT ARROW
+                // *** go to the next task group
+                if (e.target.tagName=='INPUT') {
+                    // $(e.target).blur();
+                    return;
+                }   
+
+                if ($('.list-projects').length>0) 
+                {
+                    // if we're in cards view, select previous card instead of jumping wrappers. 
+                    selectNext();
+                    return;
+                }                
+                selectNextGroup();
+            }             
+            if (e.keyCode==37)
+            {
+                //LEFT ARROW
+                // *** go to the next task group
+
+                if (e.target.tagName=='INPUT') {
+                    return;
+                }
+                if ($('.list-projects').length>0) 
+                {
+                    // if we're in cards view, select previous card instead of jumping wrappers. 
+                    selectPrev();
+                    return;
+                }
+
+                nth = $(item+'.focus').index()+1; 
+                selectPrevGroup();
+
+                if ($(wrapper+'.focus '+item+':nth-child('+nth+')').length>0)
+                {
+                    $(wrapper+'.focus '+item+':nth-child('+nth+')').addClass('focus');
+                } else 
+                {
+                    $(wrapper+'.focus '+item).first().addClass('focus');
+                }
+            }
+
+            if (e.keyCode==38)
+            {
+                //UP ARROW
+                // *** go to the next task group
+                if (e.target.tagName=='INPUT') {
+                    return;
+                }
+
+                selectPrev();
+            }             
+            if (e.keyCode==40)
+            {
+                //DOWN ARROW
+                // *** go to the next task group
+                if (e.target.tagName=='INPUT') {
+                    return;
+                }
+                selectNext();
+            }            
+
             if (e.keyCode==9)
             {
+
+             console.log('TAB');
                 
-                console.log('TAB');
+             // if (e.target.tagName=='INPUT') 
+             //    {
+             //        // *** go to the next task group
+             //        // on the Add Task 
+             //        // code to select next wrapper's item
+             //        // not currently being triggered for some reason. 
+             //        console.log('on add task, selecting next wrapper');
+             //        $(item+'.focus').parents(wrapper).removeClass('focus').next(wrapper).addClass('focus');
+             //        $(item+'.focus').removeClass('focus');
+             //        $(wrapper+'.focus '+item).first().addClass('focus'); 
+             //        return;                              
+             //    }
+
                 //if in task-description, focus on comment.
                 if ($(e.target).parents('.task-description').length>0)
                 {
@@ -42,72 +295,20 @@ function init() {
             if (e.keyCode==9 && $('.overlay-layer').length<=0)
             {
                 // don't tab through items if a overlay is popped up.
-                 
-                // tab
-                if ($('.content .list-item').length>0)
-                {
-                    // are we on a list page or a task page.
-                    item='.content .list-item';
-                    wrapper='nothing'; // purposely to not select anything
-                } else 
-                {
-                    // we have to add focus to the wrapper so we can loop through the wrappers
-                    // as well as the tasks themselves. 
-                    // we need a wrapper
-                    item='.tasks-group-body>div>div';
-                    wrapper='.tasks-group-wrapper';
-                }
+                // keyCode 9 = tab
+                
                 /**** still needs to take into account empty next task group */
-                if ($('.focus').length==0)
+                if (e.shiftKey)
                 {
-                    $(item).first().addClass('focus').parents(wrapper).addClass('focus');
-                } else 
+                    // if shift+tab, go back up
+                   selectPrev();
+                } else
                 {
-                    if (e.shiftKey)
-                    {
-                        if ($(item).length>0)
-                        {
-                            // $(item+'.focus').removeClass('focus').prev(item).addClass('focus');
-                            if ($(item+'.focus').prev(item).length==0)
-                            {
-                                // there isn't another task in that wrapper
-                                if (wrapper !='nothing')
-                                {
-                                $(item+'.focus').parents(wrapper).removeClass('focus').prev(wrapper).addClass('focus');
-                                $(item+'.focus').removeClass().parents(wrapper).removeClass('focus');
-                                $(wrapper+'.focus '+item).last().addClass('focus');
-                                }
-                            } else 
-                            {
-                                // if there is another task or item, remove it from that item and add it to the next
-                                $(item+'.focus').removeClass('focus').prev(item).addClass('focus');   
-                            } 
-
-                        }
-                    } else
-                    {
-                        if ($(item+'.focus').next(item).length==0)
-                        {
-                           // there isn't another task in that wrapper
-                           if (wrapper=='nothing')
-                           {
-                                // if there isn't a wrapper
-                                $(item).first().addClass('focus');
-                           }
-                            else
-                           {
-                                // if there is a wrapper
-                                $(item+'.focus').parents(wrapper).removeClass('focus').next(wrapper).addClass('focus');
-                                $(item+'.focus').removeClass();
-                                $(wrapper+'.focus '+item).first().addClass('focus');                           
-                            }
-                        }
-                        else 
-                        {
-                            // if there is another task or item, remove it from that item and add it to the next
-                            $(item+'.focus').removeClass('focus').next(item).addClass('focus');   
-                        }           
+                    if (e.target.tagName=='INPUT') {
+                        return;
                     }
+
+                    selectNext();          
                 }
 
             }
@@ -194,79 +395,130 @@ function init() {
             	{
             		console.log('ctrl+b');
             		//ctrl+b
-            		$(e.target).parent().parent().next().find('.icon-text-bold').click();
+                    // $(e.target).parent().parent().next().find('.icon-text-bold').click(); disabled 5/5/2018
+
+            		$(e.target).closest('.DraftEditor-root').parent().find('.icon-text-bold').click();
             	}
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==85)
             	{
             		console.log('ctrl+u');
             		//ctrl+b
-            		$(e.target).parent().parent().next().find('.icon-text-underlined').click();
+                    // $(e.target).parent().parent().next().find('.icon-text-underlined').click();
+            		$(e.target).closest('.DraftEditor-root').parent().find('.icon-text-underlined').click();
             	}
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==73)
             	{
             		console.log('ctrl+i');
             		//ctrl+b
-            		$(e.target).parent().parent().next().find('.icon-text-italic').click();
+            		$(e.target).closest('.DraftEditor-root').parent().find('.icon-text-italic').click();
             	}
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==49)
             	{
             		console.log('ctrl+1');
             		//ctrl+b
-            		$(e.target).parent().parent().next().find('button:contains(H1)').click();
+            		$(e.target).closest('.DraftEditor-root').parent().find('button:contains(H1)').click();
             	}
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==50)
             	{
             		console.log('ctrl+2');
             		//ctrl+b
-            		$(e.target).parent().parent().next().find('button:contains(H2)').click();
+            		$(e.target).closest('.DraftEditor-root').parent().find('button:contains(H2)').click();
             	}
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==55)
             	{
             		console.log('ctrl+7');
             		//unordered list
-            		$(e.target).parent().parent().next().find('.icon-text-list').click();
+            		$(e.target).closest('.DraftEditor-root').parent().find('.icon-text-list').click();
             	}
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==56)
             	{
             		console.log('ctrl+8');
             		//numbered list
-            		$(e.target).parent().parent().next().find('.icon-text-list-ordered').click();
+            		$(e.target).closest('.DraftEditor-root').parent().find('.icon-text-list-ordered').click();
             	}
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==57)
             	{
             		console.log('ctrl+9');
             		//quote
-            		$(e.target).parent().parent().next().find('.icon-text-quote').click();
+            		$(e.target).closest('.DraftEditor-root').parent().find('.icon-text-quote').click();
             	}
             	if ((e.ctrlKey || e.metaKey) && e.keyCode==48)
             	{
             		console.log('ctrl+0');
             		//code
-            		$(e.target).parent().parent().next().find('.icon-text-code').click();
+            		$(e.target).closest('.DraftEditor-root').parent().find('.icon-text-code').click();
             	}
 
-            }
+            }  // // end if $(e.target).hasClass('public-DraftEditor-content')
             // moved down to allow the rte editor to blur on escape first. 
             
-            // Escape Key anywhere
-            if (e.keyCode==27)
-                {
-                    closeOverlay(e);
-                }
+            
             // If you're adding a task or in the search box. 
             // Input 
             if (e.target.tagName=='INPUT') 
             {
                 // clear focus 
-                $('.focus').removeClass('focus');
+
+                if ($('.focus').parents(wrapper).length>0) 
+                {
+                    // are we tabbing through tasks and is this an "Add Task" input. 
+                    console.log('task page, removing class & selecting next wrapper');
+                    $(wrapper+'.focus ').removeClass('focus').next(wrapper).addClass('focus');  
+                    $('input.focus').removeClass('focus');
+                    // $(item+'.focus').parents(wrapper).removeClass('focus').next(wrapper).addClass('focus');
+                    $(wrapper+'.focus '+item).first().addClass('focus');  
+                         
+                } else
+                {
+                    console.log('removing class focus');
+                    // we're on any other page and are tabbing away from an input.
+                    $('.focus').removeClass('focus');                    
+                }
 
                 //.has-inner-icon
-
+                 console.log($(e.target).attr('name'));
                 console.log('keydown on input');
+
+                 if ($('.popup-body.filters').length>0)
+                {
+                    // we're in the filters area now. 
+                    // not working yet.
+                    if (e.keyCode==13) 
+                    {
+                       console.log($(e.target).parent());
+                       console.log('open next dropdown');
+                       $('.Select-control').last()[0].click();
+                    }
+                }
                 if (e.keyCode==27)
                 {
                     // ESC key
+
+                    if ($('.overlay-layer').length>0)
+                    {
+                        // if there's an overlay, You're on a task modal screen - do closeoverlay and don't clear filters, etc.
+                        closeOverlay(e);
+                        return;
+                    }
+                    
+                    
+                    // you're not on an overlay screen and ESC was pressed. Clear or blur the search box.
+                    e.preventDefault();
+                    e.stopPropagation();
+
                     console.log('esc key');
+                
+
+                    if ($('.Select.is-open').length>1) 
+                    {
+                        console.log('.Select.is-open');
+                        $(e.target).blur();
+                        // is a select drop down open. If so just blur it.
+                        // click the top right-hand corner of the screen.
+                        // there is no blur option because it's not an actual select form control. 
+                        //document.elementFromPoint($(document).width(), 1).click();   
+                        return;
+                    }
                     if ($('a.clear-button').length>0) 
                     {
                         $('a.clear-button')[0].click();
@@ -286,6 +538,7 @@ function init() {
                     {
                         $(e.target).next().click();
                     }*/
+                    return;
                 }
                 if (e.keyCode==13 & lastKey=='Enter')
                 {
@@ -301,13 +554,29 @@ function init() {
                     //$(e.target).clone().addClass('dupe').appendTo(e.target);
                     //clearing the input doesn't work. meteor is weird.
                     //list-section
+                    // if in a filter select next one.
+                   
+                    if ($(e.target).attr('name')=='title' && $('.page-overlay').length>0)
+                    {
+                        // if we're editing the title of a task at the top of a modal dialog
+                        // you have to have the page-overlay added, however, otherwise it prevents adding new tasks.
+                        // blur on enter.
+                        // this doesn't appear to work at the moment. 5/2/2018
+
+                        $(e.target).removeClass('focus');
+                        $(e.target).blur();
+                    }
                     lastKey='Enter';
                 } else {
                     lastKey='';
                 }
                     
             }
-            
+            // Escape Key anywhere
+            if (e.keyCode==27)
+                {
+                    closeOverlay(e);
+                }
             
             // If you're not adding a task, and you're not editing the description.
             // Basically, if you're anywhere on the site. 
@@ -325,13 +594,15 @@ function init() {
                         $(item + '.focus a')[0].click();
                     }
                 }
-                if (e.keyCode==83) 
+                if (e.keyCode==83||e.keyCode==191) 
                 {
-                    console.log('keydown: s');
+                    console.log('keydown: s or /');
                     //"s" 's' for search
+                    // or "/" to copy Gmail's search shortcut.
+
                     $('.focus').removeClass('focus');
 
-                    if ( $('#page-utilities').first().hasClass('opened') ) 
+                    if ( $('.page-utilities').first().hasClass('opened') ) 
                     {
                         // open the toggle area if not open.
                         
@@ -354,6 +625,11 @@ function init() {
                     if ($('.input-placeholder').length>0 && $('.page-overlay').length==0) 
                     {
                             $('.input-placeholder')[0].click(); 
+                    }
+                    if ($('.filter-option-add').length>0)
+                    {
+                        //let the magic begin...
+                        jQuery('.filter-option-add .icon-add').first().click();
                     }
                 }
                 
@@ -601,6 +877,8 @@ init();
 function closeOverlay(e) 
 {
 
+    
+
     console.log('closeOverlay(e)');
     if ($('.focus').length>0)
     {
@@ -646,8 +924,17 @@ function closeOverlay(e)
         
         console.log('still saving... please wait');
 
-        $('.page-overlay-navigation').after('<div class="error-message">Saving in Progress... Try again in a second.</div>');
+        $('.page-overlay-navigation').after('<div class="error-message">Saving in Progress... Trying again in a second.</div>').delay(1000).fadeOut();
         
+/*        window.setTimeout(
+            function() 
+            {
+                if ($('.page-overlay-navigation a').length>0)
+                {
+                    $('.page-overlay-navigation a')[0].click(),1000);        
+                }
+            }, 1000);*/
+
         // $('.save-state').bind("DOMSubtreeModified",function()
         // {
         //     // monitor save-state. When changed, close the window.
@@ -679,7 +966,14 @@ function closeOverlay(e)
         $('.preview-attachments .close-button a')[0].click();
          return false;
     }*/
-
+    /*Previewing*/
+    if ($('.preview-attachments .close-button a').length > 0)
+    {
+        e.preventDefault();
+        e.stopPropagation(); 
+        $('.preview-attachments .close-button a')[0].click();
+        return false;
+    }
     /* Sub Tasks */
     if ($('#task-page .back-button').length>0)
     {

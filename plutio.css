@@ -1,13 +1,53 @@
- tab select*/
+/* Style to show you when there is a search, filter or sort already in place */
+.page-utilities input[type="text"]:not(:placeholder-shown),
+.page-utilities .Select.has-value>div,
+.page-utilities .Select.has-value span {
+  background:#eeffee;
+  font-weight:bold;
+  color:#000;
+}
+
+.page-utilities .fieldset-content.clearable .input-value{
+  background:#eeffee;
+  font-weight:bold;
+  color:#000;
+}
+/* fix for clearing drop down selects */
+span.Select-clear-zone {
+    z-index:9999;
+    position:absolute;
+}
+.Select-value {
+    padding-left:35px !important;
+}
+
+/* fix for word-wrap in quotes in the rich text editor */
+/* main.css has it originally as word-break:break-all */
+.public-DraftStyleDefault-pre {
+    word-break: normal;
+}
+
+/* bug fix for the comments container when small comment */
+.comments-container .comments-body {
+    min-height: 95px;
+}
+
+/* empty task groups collapse when searching for a task */
+
+.tasks-group.has-no-tasks {
+    width:175px !important;
+}
+
+/* tab select*/
 .focus {
     box-shadow:0 0 40px 0 rgba(25,70,97,.08);
-    border:1px green solid;  
+    border:1px #90bb94 solid !important;
 }
 .tasks-group-content div.focus {
     border:none !important;
     
 }
-div.focus>div>.task .task-link, .list-item.focus{
+div.focus>div>.task .task-link, .list-item.focus, a.task-link.focus, .task.focus a.task-link{
     background:#272f41 !important;
     color:#fff !important;
 }
@@ -44,8 +84,9 @@ a.task-toggle i {
     padding:2px;
 }
 input:focus {
-    border:1px #05b505 solid !important;
-    border-radius:5px !important;
+   border:1px #90bb94 solid !important;
+   font-size:1.05em;
+   border-radius:5px !important;
 }
 /* Inline images in comments & descriptins */
 
@@ -241,4 +282,11 @@ a.task-link .task-checklist.not-completed-checklist {
 .task-link {
     min-height:40px;
     margin-top:2px;
+}
+
+
+*/
+a.task-link.focus{
+    background:#272f41 !important;
+    color:#fff !important;
 }
